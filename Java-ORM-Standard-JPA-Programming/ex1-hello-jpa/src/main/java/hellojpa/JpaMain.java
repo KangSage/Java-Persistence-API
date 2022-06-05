@@ -9,10 +9,13 @@ public class JpaMain {
 
   public static void main(String[] args) {
 
+    // EMF는 서버 구동시 단 1개의 객체만 생성하고
     EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
 
-    // DB 커넥션을 얻어온다.
+    // EM은 TX단위의 요청에서 생성했다가 끝날 때 close로 버리는 식으로 사용한다.
+    // EM은 Thread간에 공유 절대 금지 - JPA의 모든 데이터 변경은 TX안에서 실행할 것
     EntityManager em = emf.createEntityManager();
+
     // Transaction을 얻어오고
     EntityTransaction tx = em.getTransaction();
     // tx 시작
