@@ -22,7 +22,8 @@ public class JpaMain {
       System.out.println("findMember.id = " + findMember.getId());
       System.out.println("findMember.name = " + findMember.getName());
 
-      em.remove(findMember);
+      // JPA에서 조회한 객체는 tx.commit 전에 변경 사항을 체크해서 자동으로 업데이트한다.
+      findMember.setName("HelloJPA");
 
       // Transaction commit
       tx.commit();
