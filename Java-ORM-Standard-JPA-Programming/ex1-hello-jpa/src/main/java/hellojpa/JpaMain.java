@@ -18,14 +18,9 @@ public class JpaMain {
     // tx 시작
     tx.begin();
     try {
-      // save할 entity 객체 생성
-      Member member = new Member();
-      member.setId(2L);
-      member.setName("helloB");
-
-      // save
-      em.persist(member);
-
+      Member findMember = em.find(Member.class, 1L);
+      System.out.println("findMember.id = " + findMember.getId());
+      System.out.println("findMember.name = " + findMember.getName());
       // Transaction commit
       tx.commit();
     } catch (Exception e) {
