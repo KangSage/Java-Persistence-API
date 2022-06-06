@@ -1,5 +1,6 @@
 package hellojpa;
 
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -12,8 +13,6 @@ public class JpaMain {
     // EMF는 서버 구동시 단 1개의 객체만 생성하고
     EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
 
-    // EM은 TX단위의 요청에서 생성했다가 끝날 때 close로 버리는 식으로 사용한다.
-    // EM은 Thread간에 공유 절대 금지 - JPA의 모든 데이터 변경은 TX안에서 실행할 것
     EntityManager em = emf.createEntityManager();
 
     // Transaction을 얻어오고
@@ -21,12 +20,19 @@ public class JpaMain {
     // tx 시작
     tx.begin();
     try {
-      Member findMember = em.find(Member.class, 1L);
-      System.out.println("findMember.id = " + findMember.getId());
-      System.out.println("findMember.name = " + findMember.getName());
+      //      Member findMember = em.find(Member.class, 1L);
 
-      // JPA에서 조회한 객체는 tx.commit 전에 변경 사항을 체크해서 자동으로 업데이트한다.
-      findMember.setName("HelloJPA");
+      // JPQL은 쿼리가 테이블이 대상이 아니라 객체가 대상이다.
+      List<Member> result =
+          em.createQuery("select m from Member as m", Member.class)
+              // JPQL은 객체에 맞추는 객체 지향 쿼리로 방언 셋팅에 맞게 실제 실행 쿼리가 변경된다.
+              .setFirstResult(5)
+              .setMaxResults(8)
+              .getResultList();
+
+      for (Member member : result) {
+        System.out.println("member.name = " + member.getName());
+      }
 
       // Transaction commit
       tx.commit();
