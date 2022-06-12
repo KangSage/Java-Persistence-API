@@ -14,8 +14,6 @@ import javax.persistence.Persistence;
 public class JpaMain {
 
   public static void main(String[] args) {
-
-    // EMF는 서버 구동시 단 1개의 객체만 생성하고
     EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
 
     EntityManager em = emf.createEntityManager();
@@ -25,19 +23,22 @@ public class JpaMain {
     // tx 시작
     tx.begin();
     try {
-      // 객체를 생성하고 필드에 값을 할당하는 행위까지는 비영속
+
       Member member = new Member();
-      member.setId(100L);
+      member.setId(101L);
       member.setName("HelloJPA");
 
-      // 영속 - 정확히는 이때 DB에 저장되진 않는다.
       System.out.println("=== BEFORE ===");
       em.persist(member);
-      // 준영속 - 영속성 컨텍스트에서 지운다.
-      em.detach(member);
       System.out.println("=== AFTER ===");
 
-      // Transaction commit - 영속성 컨텍스트의 내용이 DB에 쿼리로 전송됨
+      // select 쿼리가 나가지 않고
+      Member foundMember = em.find(Member.class, 101L);
+
+      System.out.println("foundMember.id = " + foundMember.getId());
+      System.out.println("foundMember.name = " + foundMember.getName());
+
+      // insert 쿼리 전송
       tx.commit();
     } catch (Exception e) {
       tx.rollback();
