@@ -6,6 +6,11 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 
+/**
+ * 영속성 컨텍스트의 이점
+ * - DB와 어플리케이션 사이에 중간 계층을 둬서 여러가지의 이점이 생긴다.
+ * - 버퍼링, 캐싱 등
+ */
 public class JpaMain {
 
   public static void main(String[] args) {
@@ -20,21 +25,19 @@ public class JpaMain {
     // tx 시작
     tx.begin();
     try {
-      //      Member findMember = em.find(Member.class, 1L);
+      // 객체를 생성하고 필드에 값을 할당하는 행위까지는 비영속
+      Member member = new Member();
+      member.setId(100L);
+      member.setName("HelloJPA");
 
-      // JPQL은 쿼리가 테이블이 대상이 아니라 객체가 대상이다.
-      List<Member> result =
-          em.createQuery("select m from Member as m", Member.class)
-              // JPQL은 객체에 맞추는 객체 지향 쿼리로 방언 셋팅에 맞게 실제 실행 쿼리가 변경된다.
-              .setFirstResult(5)
-              .setMaxResults(8)
-              .getResultList();
+      // 영속 - 정확히는 이때 DB에 저장되진 않는다.
+      System.out.println("=== BEFORE ===");
+      em.persist(member);
+      // 준영속 - 영속성 컨텍스트에서 지운다.
+      em.detach(member);
+      System.out.println("=== AFTER ===");
 
-      for (Member member : result) {
-        System.out.println("member.name = " + member.getName());
-      }
-
-      // Transaction commit
+      // Transaction commit - 영속성 컨텍스트의 내용이 DB에 쿼리로 전송됨
       tx.commit();
     } catch (Exception e) {
       tx.rollback();
