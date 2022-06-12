@@ -20,14 +20,15 @@ public class JpaMain {
       Member member = em.find(Member.class, 150L);
       member.setName("AAAAA");
 
-      // 준영속 - EM 초기화
-      em.clear();
+      // 준영속 - EM을 닫는다.
+      em.close();
+      System.out.println("========= Atfer em.close ==========");
 
-      // select 쿼리가 1번 더 실행된다
+      // em이 닫혀서 조회가 실행되지 않는다.
       Member member2 = em.find(Member.class, 150L);
 
-      System.out.println("===================");
-      tx.commit(); // update 쿼리가 실행되지 않는다.
+      System.out.println(" ===================");
+      tx.commit(); // 커밋할 것이 없다.
     } catch (Exception e) {
       tx.rollback();
     } finally {
