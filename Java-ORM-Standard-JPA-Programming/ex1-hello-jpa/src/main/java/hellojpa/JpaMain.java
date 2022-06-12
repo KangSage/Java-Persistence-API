@@ -20,8 +20,11 @@ public class JpaMain {
       Member member = em.find(Member.class, 150L);
       member.setName("AAAAA");
 
-      // 준영속 - EM의 관리에서 제외
-      em.detach(member);
+      // 준영속 - EM 초기화
+      em.clear();
+
+      // select 쿼리가 1번 더 실행된다
+      Member member2 = em.find(Member.class, 150L);
 
       System.out.println("===================");
       tx.commit(); // update 쿼리가 실행되지 않는다.
