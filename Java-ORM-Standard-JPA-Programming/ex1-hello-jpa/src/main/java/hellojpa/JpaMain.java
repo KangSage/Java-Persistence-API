@@ -23,22 +23,13 @@ public class JpaMain {
     // tx 시작
     tx.begin();
     try {
-
-      Member member = new Member();
-      member.setId(101L);
-      member.setName("HelloJPA");
-
-      System.out.println("=== BEFORE ===");
-      em.persist(member);
-      System.out.println("=== AFTER ===");
-
-      // select 쿼리가 나가지 않고
-      Member foundMember = em.find(Member.class, 101L);
-
-      System.out.println("foundMember.id = " + foundMember.getId());
-      System.out.println("foundMember.name = " + foundMember.getName());
-
-      // insert 쿼리 전송
+      // 영속
+      Member foundMember1 = em.find(Member.class, 101L);
+      // 캐시에서 조회 - 쿼리는 1번
+      Member foundMember2 = em.find(Member.class, 101L);
+      // 1차 캐시에서 동일성을 보장하므로 == 비교시 true를 리턴, equals도 true를 리턴
+      System.out.println("result = " + (foundMember1 == foundMember2));
+      System.out.println("equals result = " + (foundMember1.equals(foundMember2)));
       tx.commit();
     } catch (Exception e) {
       tx.rollback();
