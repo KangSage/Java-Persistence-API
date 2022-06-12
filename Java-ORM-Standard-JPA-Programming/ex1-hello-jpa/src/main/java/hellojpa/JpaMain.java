@@ -6,11 +6,6 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 
-/**
- * 영속성 컨텍스트의 이점
- * - DB와 어플리케이션 사이에 중간 계층을 둬서 여러가지의 이점이 생긴다.
- * - 버퍼링, 캐싱 등
- */
 public class JpaMain {
 
   public static void main(String[] args) {
@@ -18,22 +13,23 @@ public class JpaMain {
 
     EntityManager em = emf.createEntityManager();
 
-    // Transaction을 얻어오고
     EntityTransaction tx = em.getTransaction();
-    // tx 시작
+
     tx.begin();
     try {
-      // 영속
-      Member member1 = new Member(150L, "A");
-      Member member2 = new Member(160L, "B");
+      Member member = em.find(Member.class, 150L);
 
-      // 여기서 각각 쿼리가 실행되지 않고 버퍼링 된다.
-      em.persist(member1);
-      em.persist(member2);
+      // em.persist()를 호출하지 않아도 영속성 컨텍스트에서 자동으로 저장된다.
+      member.setName("ZZZZZ");
 
-      System.out.println("=================");
+      // 아래아 같은 코드가 없어도 엔티티 객체의 값이 변경되면 커밋 될 때 자동으로 저장된다.
+      // if (member.getName().equals("ZZZZZ")) {
+      //   em.update(member);
+      // }
 
-      // 실제 쿼리는 1번에 모아서 실행
+      // em.persist(member);
+
+      // Dirty Checking으로 변경점 자동 업데이트 쿼리 실행
       tx.commit();
     } catch (Exception e) {
       tx.rollback();
