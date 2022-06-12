@@ -24,12 +24,16 @@ public class JpaMain {
     tx.begin();
     try {
       // 영속
-      Member foundMember1 = em.find(Member.class, 101L);
-      // 캐시에서 조회 - 쿼리는 1번
-      Member foundMember2 = em.find(Member.class, 101L);
-      // 1차 캐시에서 동일성을 보장하므로 == 비교시 true를 리턴, equals도 true를 리턴
-      System.out.println("result = " + (foundMember1 == foundMember2));
-      System.out.println("equals result = " + (foundMember1.equals(foundMember2)));
+      Member member1 = new Member(150L, "A");
+      Member member2 = new Member(160L, "B");
+
+      // 여기서 각각 쿼리가 실행되지 않고 버퍼링 된다.
+      em.persist(member1);
+      em.persist(member2);
+
+      System.out.println("=================");
+
+      // 실제 쿼리는 1번에 모아서 실행
       tx.commit();
     } catch (Exception e) {
       tx.rollback();
