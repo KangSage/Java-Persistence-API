@@ -17,13 +17,14 @@ public class JpaMain {
 
     tx.begin();
     try {
-      Member member = new Member(200L, "member200");
-      em.persist(member);
+      Member member = em.find(Member.class, 150L);
+      member.setName("AAAAA");
 
-      // 직접 호출
-      em.flush();
-      System.out.println("flush() 호출");
-      tx.commit();
+      // 준영속 - EM의 관리에서 제외
+      em.detach(member);
+
+      System.out.println("===================");
+      tx.commit(); // update 쿼리가 실행되지 않는다.
     } catch (Exception e) {
       tx.rollback();
     } finally {
