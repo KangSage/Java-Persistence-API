@@ -16,18 +16,14 @@ public class JpaMain {
 
     tx.begin();
     try {
-      Member member = em.find(Member.class, 150L);
-      member.setName("AAAAA");
+      Member member = new Member();
+      member.setId(3L);
+      member.setUsername("C");
+      member.setRoleType(RoleType.ADMIN);
 
-      // 준영속 - EM을 닫는다.
-      em.close();
-      System.out.println("========= Atfer em.close ==========");
+      em.persist(member);
 
-      // em이 닫혀서 조회가 실행되지 않는다.
-      Member member2 = em.find(Member.class, 150L);
-
-      System.out.println(" ===================");
-      tx.commit(); // 커밋할 것이 없다.
+      tx.commit();
     } catch (Exception e) {
       tx.rollback();
     } finally {
