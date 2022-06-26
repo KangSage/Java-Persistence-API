@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 반드시 이 위치에 존재해야한다. -->
 <persistence version="2.2"
-  xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
   <persistence-unit name="hello">
     <properties>
@@ -9,13 +10,31 @@
       <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
       <property name="javax.persistence.jdbc.user" value="sa"/>
       <property name="javax.persistence.jdbc.password" value=""/>
-      <property name="javax.persistence.jdbc.url" value="jdbc:h2:tcp://localhost:1521/test"/>
-      <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
+      <property name="javax.persistence.jdbc.url"
+        value="jdbc:h2:tcp://localhost:1521/test"/>
+      <property name="hibernate.dialect"
+        value="org.hibernate.dialect.H2Dialect"/>
       <!-- 옵션 -->
       <property name="hibernate.show_sql" value="true"/>
       <property name="hibernate.format_sql" value="true"/>
       <property name="hibernate.use_sql_comments" value="true"/>
-      <!--<property name="hibernate.hbm2ddl.auto" value="create" />-->
+      <!-- 한 커밋으로 일괄 처리할 쿼리 갯수 -->
+      <property name="hibernate.jdbc.batch_size" value="10"/>
+
+      <!-- create 일 경우 Entity를 기준으로 맵핑 될 테이블을 생성한다. -->
+      <!-- 스키마 자동 생성 주의 -->
+      <!-- 운영 장비에는 절대 create, create-drop, update를 사용해선 안됨 -->
+      <property name="hibernate.hbm2ddl.auto" value="update"/>
+      <!--
+        create-drop - 실행시 생성, 종료시 삭제
+        update      - 변경된 부분만 실행
+        validate    - 엔티티와 테이블이 정상 매핑되었는지 체크
+        none        - 관례상 사용될 뿐 아무 글자나 적어도 같다.
+        -->
+      <!--<property name="hibernate.hbm2ddl.auto" value="create-drop"/>-->
+      <!--<property name="hibernate.hbm2ddl.auto" value="update"/>-->
+      <!--<property name="hibernate.hbm2ddl.auto" value="validate"/>-->
+      <!--<property name="hibernate.hbm2ddl.auto" value="none"/>-->
     </properties>
   </persistence-unit>
 </persistence>
