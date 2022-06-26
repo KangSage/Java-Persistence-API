@@ -24,7 +24,7 @@
       <!-- create 일 경우 Entity를 기준으로 맵핑 될 테이블을 생성한다. -->
       <!-- 스키마 자동 생성 주의 -->
       <!-- 운영 장비에는 절대 create, create-drop, update를 사용해선 안됨 -->
-      <property name="hibernate.hbm2ddl.auto" value="create"/>
+      <property name="hibernate.hbm2ddl.auto" value="update"/>
       <!--
         create-drop - 실행시 생성, 종료시 삭제
         update      - 변경된 부분만 실행
